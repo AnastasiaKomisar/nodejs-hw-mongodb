@@ -2,8 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import pino from 'pino';
 import { getEnvVar } from './utils/getEnvVar.js';
-import contactsRouter from './routers/contactsRouter.js';
-import { getAllContacts, getContactById } from './services/contacts';
+import { getAllContacts, getContactById } from './services/contacts.js';
  
 const logger = pino();
 
@@ -21,9 +20,31 @@ export function setupServer() {
     next();
   });
 
-  app.use('/contacts', contactsRouter);
+  app.get('/contacts', async (req, res) => {
+    const contacts = await getAllContacts();
 
-  app.use('*', (req, res, next) => {
+    res.status(200).json({
+      data: contacts,
+    });
+  });
+
+  app.get('/contacts/:contactId', async (req, res, next) => {
+    const { contactId } = req.params;
+    const contact = await getContactById(contactId);   
+    
+	if (!contact) {
+	  res.status(404).json({
+		  message: 'Contact not found'
+	  });
+	  return;
+	}
+
+    res.status(200).json({
+      data: contact,
+    });
+  });
+
+  app.use((req, res) => {
     res.status(404).json({ message: 'Not found' });
   });
 
@@ -36,30 +57,6 @@ export function setupServer() {
 
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
-  });
-
-  app.get('/contacts', async (req, res) => {
-    const students = await getAllContacts();
-
-    res.status(200).json({
-      data: students,
-    });
-  });
-
-  app.get('/contacts/:contactId', async (req, res, next) => {
-    const { contacttId } = req.params;
-    const contact = await getContactById(contacttId);   
-    
-	if (!contact) {
-	  res.status(404).json({
-		  message: 'Contact not found'
-	  });
-	  return;
-	}
-
-    res.status(200).json({
-      data: contact,
-    });
   });
 
 }
