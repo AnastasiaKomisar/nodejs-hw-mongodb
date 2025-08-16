@@ -3,9 +3,9 @@ import cors from 'cors';
 import pino from 'pino';
 import { getEnvVar } from './utils/getEnvVar.js';
 import router from './routers/contacts.js';
-import { errorHandler, notFoundhandler } from './middlewares/errorHandler.js';
+import { errorHandler } from './middlewares/errorHandler.js';
+import { notFoundhandler } from './middlewares/notFoundHandler.js';
 
- 
 const logger = pino();
 
 const PORT = Number(getEnvVar('PORT', '3000'));
