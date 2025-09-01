@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import pino from 'pino';
+import cookieParser from 'cookie-parser';
 import { getEnvVar } from './utils/getEnvVar.js';
 import router from './routers/index.js';
 import { errorHandler } from './middlewares/errorHandler.js';
@@ -16,6 +17,7 @@ export function setupServer() {
 
   app.use(cors());
   app.use(express.json());
+  app.use(cookieParser());
 
   app.use((req, res, next) => {
     logger.info(`${req.method} ${req.url}`);
