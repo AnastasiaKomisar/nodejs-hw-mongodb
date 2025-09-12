@@ -7,6 +7,7 @@ import router from './routers/index.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundhandler } from './middlewares/notFoundHandler.js';
 import { UPLOAD_DIR } from './constants/index.js';
+import { swaggerDocs } from './middlewares/swaggerDocs.js';
 
 const logger = pino();
 
@@ -36,5 +37,5 @@ export function setupServer() {
   });
 
   app.use('/uploads', express.static(UPLOAD_DIR));
-
+  app.use('/api-docs', swaggerDocs());
 }
